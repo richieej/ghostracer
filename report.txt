@@ -1,0 +1,139 @@
+1.
+ACTOR
+Actor : public GraphObject
+    virtual void doSomething()=0;
+        pure virtual function as all classes derived have their specific doSomething() function
+        provides each actor functionality of what to do in each tick of the game
+    virtual bool detOverlap(Actor* A, Actor* B);
+        made this function virtual so all derived classes can access this function
+    virtual void genmove(Actor* A);
+        this is a general move algorithm, virtual so all derived actors can access
+    virtual void hitByHW() = 0;
+        pure virtual, as most derived classes have specific actions when hit by holy water; if they don't then leave it as empty function, as will never be called
+    getter/setter functions:
+        all virtual so derived actors can access
+
+StatObj : Actor
+
+GRActivatedObj : StatObj
+
+OilSlick : GRActivatedObj
+    virtual void doSomething();
+	virtual void hitByHW() {}
+        does not have hitByHW functionality
+    
+HealingG : GRActivatedObj
+    virtual void doSomething();
+	virtual void hitByHW();
+        does have hitByHW functionality
+
+HolyWaterG : GRActivatedObj
+    virtual void doSomething();
+	virtual void hitByHW(); 
+        does have hitByHW functionality
+        
+LostSoulG : GRActivatedObj
+    virtual void doSomething();
+	virtual void hitByHW() {}
+        does not have hitByHW functionality
+
+Borderline : StatObj
+    virtual void doSomething();
+	virtual void hitByHW() {}
+        does not have hitByHW functionality
+
+
+Pedestrian : Actor
+
+HumanPed : Pedestrian
+    virtual void doSomething();
+	virtual void hitByHW();
+        does have hitByHW functionality
+
+ZombiePed : Pedestrian
+	virtual void doSomething();
+	virtual void ZPattack();
+        helps carry out doSomething(): make zombieped face ghostracer, grunt.
+	virtual void hitByHW();
+        does have functionality
+
+
+Cab : Actor
+
+ZombieCab : Cab
+    virtual void doSomething();
+	virtual void hitByHW();
+        has functionality
+
+GhostRacer : Cab
+    virtual void doSomething();
+	virtual void GRmove();
+        more specific move algorithm to genmove
+	virtual int getSpeed() { return m_speed; }
+	virtual int getSprays() { return m_sprays; }
+	virtual void setSprays(int set) { m_sprays = set; }
+        get/set functions
+	virtual void hitByHW() {}
+        no functionality
+
+HolyWaterProjectile : Actor
+    virtual void doSomething();
+	virtual void setmaxTraveldistance(int set) { m_maxtraveldistance = set; }
+	virtual int getmaxTraveldistance() { return m_maxtraveldistance; }
+	virtual void setTravelled(int set) { m_travelled = set; }
+	virtual int getTravelled() { return m_travelled; }
+        get/set functions
+	virtual void hitByHW() {}
+
+STUDENTWORLD 
+StudentWorld : GameWorld
+    virtual int init();
+        construct representation of the current level
+        populate with initial objects using data structures u come up with
+    virtual void init_yellowlines();
+    virtual void init_whitelines();
+        help initialize yellow and white border lines in init()
+    
+    virtual int move();
+        each call runs a single tick of the game
+        calls each actor's doSomething method
+        introduce new actors (appearing at top of screen)
+        dispose of actors that disappear beyond bottom of screen
+        dispose of actors that disappear organically
+    virtual void updateStatusLine();
+        in move(), helps to update status line.
+    virtual void holywaterCheck(HolyWaterProjectile* HW);
+        called by HolyWaterProjectile::doSomething,
+        checks if there are actors overlapping with the projectile
+    virtual void addHolyWater();
+        called by GhostRacer::GRmove() when key_space is pressed to add HolyWaterProjectile.
+    virtual void zombieCabCheck(ZombieCab* ZC);
+        called by ZombieCab::doSomething()
+        helps to check the actors in current lane, and then updates speed accordingly
+    virtual void addOilSlick(double x, double y);
+        helps add OilSlick
+        called by ZombieCab::hitByHW()
+    virtual void addHealingG(double x, double y);
+        helps add Healing goodie
+        called by ZombiePed::hitByHW()
+    virtual bool closestAvoidBottom(double lane);
+        called by StudentWorld::move()
+        helps to add a zombie cab to the actor list. detects closest actor at bottom and top that is avoidance worthy.
+
+    virtual void cleanUp(); 
+        destroy all actors currently in game
+    
+    virtual GhostRacer* getGhostRacer() { return m_ghostracer; }
+        gets ghostracer; this is initialized in init()
+    virtual void decSouls() { m_soulstosave--; }
+        decrements soul to save count.
+    
+    virtual ~StudentWorld();
+        virtual destructor so the m_actors list will be deleted
+        also because it was defined in gameworld class (the base class of studentworld)
+
+2.
+unfinished functionality:
+
+3.
+ghostracer has no horizontal speed, so only needs one speed variable

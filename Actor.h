@@ -35,7 +35,7 @@ public:
 	virtual void doSomething()=0;
 	virtual bool detOverlap(Actor* A, Actor* B);
 	virtual void genmove(Actor* A);
-	virtual void hitByHW();
+	virtual void hitByHW() = 0;
 
 	virtual int getHealth() { return m_health; }
 	virtual void setHealth(int set) { m_health = set; }
@@ -70,9 +70,6 @@ class StatObj : public Actor
 {
 public:
 	StatObj(int imageID, double startX, double startY, int dir = 0, double size = 1.0, unsigned int depth = 0);
-	virtual void doSomething()=0;
-
-
 private:
 
 };
@@ -81,7 +78,6 @@ class GRActivatedObj : public StatObj
 {
 public:
 	GRActivatedObj(int imageID, double startX, double startY, int dir = 0, double size = 1.0, unsigned int depth = 0);
-	virtual void doSomething() = 0;
 };
 
 class OilSlick : public GRActivatedObj
@@ -89,6 +85,7 @@ class OilSlick : public GRActivatedObj
 public:
 	OilSlick(StudentWorld* env, int imageID, double startX, double startY, int dir = 0, double size = 2.0, unsigned int depth = 2);
 	virtual void doSomething();
+	virtual void hitByHW() {}
 };
 
 class HealingG : public GRActivatedObj
@@ -112,6 +109,7 @@ class LostSoulG : public GRActivatedObj
 public:
 	LostSoulG(StudentWorld* env, int imageID, double startX, double startY, int dir = 0, double size = 4.0, unsigned int depth = 2);
 	virtual void doSomething();
+	virtual void hitByHW() {}
 };
 
 
@@ -120,6 +118,7 @@ class Borderline : public StatObj
 public:
 	Borderline(StudentWorld* env, int imageID, double startX, double startY, int dir = 0, double size = 2.0, unsigned int depth = 2);
 	virtual void doSomething();
+	virtual void hitByHW() {}
 
 private:
 };
@@ -130,9 +129,6 @@ private:
 class Pedestrian : public Actor {
 public:
 	Pedestrian(int imageID, double startX, double startY, int dir = 0, double size = 1.0, unsigned int depth = 0);
-	virtual void doSomething() = 0;
-	
-
 private:
 	
 };
@@ -163,14 +159,9 @@ private:
 
 
 
-
-
-
-
 class Cab : public Actor {
 public:
 	Cab(int imageID, double startX, double startY, int dir = 0, double size = 1.0, unsigned int depth = 0);
-	virtual void doSomething()=0;
 };
 
 
@@ -194,6 +185,7 @@ public:
 	virtual int getSpeed() { return m_speed; }
 	virtual int getSprays() { return m_sprays; }
 	virtual void setSprays(int set) { m_sprays = set; }
+	virtual void hitByHW() {}
 
 private:
 	int m_sprays;
@@ -209,6 +201,7 @@ public:
 	virtual int getmaxTraveldistance() { return m_maxtraveldistance; }
 	virtual void setTravelled(int set) { m_travelled = set; }
 	virtual int getTravelled() { return m_travelled; }
+	virtual void hitByHW() {}
 
 
 

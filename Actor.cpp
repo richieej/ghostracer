@@ -277,6 +277,7 @@ void ZombiePed::doSomething() {
 		getStudentWorld()->getGhostRacer()->setHealth(getStudentWorld()->getGhostRacer()->getHealth() - 5);
 		setHealth(getHealth() - 2);
 		setAlive(false);
+		getStudentWorld()->playSound(SOUND_PED_DIE);
 		return;
 	}
 
@@ -359,6 +360,8 @@ ZombieCab::ZombieCab(StudentWorld* env, int imageID, double startX, double start
 	setHealth(3);
 	setMovementPD(0);
 	m_damagedGR = false;
+	setAffectedbyHW(true);
+	setAlive(true);
 	setAvoidance(true);
 	setStudentWorld(env);
 }

@@ -224,7 +224,7 @@ bool StudentWorld::closestAvoidBottom(double lane)
     {
         m_actors.push_front(new ZombieCab(this, IID_ZOMBIE_CAB, lane, 32 - SPRITE_HEIGHT / 2));
         it = m_actors.begin();
-        (*it)->setVspeed(getGhostRacer()->getSpeed() + randInt(2, 6));
+        (*it)->setVspeed(getGhostRacer()->getSpeed() + randInt(2, 4));
         return true;
     }
 
@@ -259,12 +259,12 @@ void StudentWorld::holywaterCheck(HolyWaterProjectile* HW)
     auto it = m_actors.begin();
     while (it != m_actors.end())
     {
-        
-        if (HW->detOverlap(HW, *it) && HW->getAffectedbyHW() == true)
+        if (HW->detOverlap(HW, *it) == true && (*it)->getAffectedbyHW() == true)
         {
             if ((*it)->getAlive() == true)
             {
                 (*it)->hitByHW();
+                HW->setAlive(false);
                 return;
             }
         }
@@ -296,7 +296,7 @@ void StudentWorld::zombieCabCheck(ZombieCab* ZC)
             double t_x, t_y, zc_x, zc_y;
             (*it)->getAnimationLocation(t_x, t_y);
             ZC->getAnimationLocation(zc_x, zc_y);
-            if (t_x < zc_x + ROAD_WIDTH / 2 && t_x > zc_x - ROAD_WIDTH / 2)
+            if (t_x < zc_x + ROAD_WIDTH / 2 && t_x > zc_x - ROAD_WIDTH / 2 && (*it)->getAvoidance() == true && (*it)->getAlive() == true)
             {
                 if (t_y - zc_y > 0 && t_y - zc_y < 96)
                     ZC->setVspeed(ZC->getVspeed() - 0.5);
